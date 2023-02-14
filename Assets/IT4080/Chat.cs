@@ -66,7 +66,7 @@ namespace It4080 {
             ChatMessage msg = new ChatMessage();
             msg.message = inputMessage.text;
             inputMessage.text = "";
-            sendMessage.Invoke(msg);
+            sendMessage?.Invoke(msg);
         }
 
 

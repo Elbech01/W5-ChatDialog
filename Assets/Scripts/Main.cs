@@ -15,14 +15,17 @@ public class Main : NetworkBehaviour
 
     // Start is called before the first frame update
     void Start(){
-        chat.SystemMessage("Hello world");
-        It4080.Chat.ChatMessage msg = new It4080.Chat.ChatMessage();
-        msg.message = "Foobar";
-        chat.ShowMessage(msg);
         netSettings.startServer += NetSettingsOnServerStart;
         netSettings.startHost += NetSettingsOnHostStart;
         netSettings.startClient += NetSettingsOnClientStart;
-       // netSettings.setStatusText("Not Connected");
+        netSettings.setStatusText("Not Connected");
+
+        chat.SendMessage += ChatOnSendMessage;
+    }
+
+    private void ChatOnSendMessage(It4080.Chat.ChatMessage msg)
+    {
+        chatServer.RequestSendMessageServerRpc(msg.message);
     }
     private void startClient(IPAddress ip, ushort port) {
         var utp = NetworkManager.Singleton.GetComponent<UnityTransport>();
@@ -88,7 +91,11 @@ public class Main : NetworkBehaviour
     }
 
     private void printIs(string msg) {
-        Debug.Log($"[{msg}] server:{IsServer} host:{IsHost} client:{IsClient} owner:{IsOwner}");
+        Debug.Log($"[{msg}] {MakeIsString()}");
+    }
+    private string MakeIsString()
+    {
+        return $"server:{IsServer} host:{IsHost} client:{IsClient} owner:{IsOwner}";
     }
 
     private void HostOnClientConnected(ulong clientID) {
