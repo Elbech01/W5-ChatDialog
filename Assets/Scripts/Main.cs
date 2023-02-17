@@ -20,7 +20,7 @@ public class Main : NetworkBehaviour
         netSettings.startClient += NetSettingsOnClientStart;
         netSettings.setStatusText("Not Connected");
 
-        chat.SendMessage += ChatOnSendMessage;
+        chat.sendMessage += ChatOnSendMessage;
     }
 
     private void ChatOnSendMessage(It4080.Chat.ChatMessage msg)
