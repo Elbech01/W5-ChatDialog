@@ -9,22 +9,16 @@ public class ChatServer : NetworkBehaviour
 
 
     [ClientRpc]
-    public void SendChatMessageClientRpc(string message, ClientRpcParams clientRpcParams = default)
+    public void SendChatMessageClientRpc(string message, ulong from, ClientRpcParams clientRpcParams = default)
     {
-        Debug.Log(message);
+        string toDisplay = $"[{from}]{message}";
+        Debug.Log(toDisplay);
     }
 
-    [ServerRpc]
-    public void SendChatMessageServerRpc(string message, ServerRpcParams serverRpcParams = default)
+    [ServerRpc (RequireOwnership = false)]
+    public void RequestSendMessageServerRpc(string message, ServerRpcParams serverRpcParams = default)
     {
-        Debug.Log($"Host got message: {message}");
-        string newMessage = $"Player #{serverRpcParams.Receive.SenderClientId}: {message}";
-        SendChatMessageClientRpc(newMessage);
-    }
-    [ServerRpc]
-    public void RequestSendMessageServerRpc(string msg)
-    {
-        SendChatMessageServerRpc(msg);
+        SendChatMessageClientRpc(message, serverRpcParams.Receive.SenderClientId);
     }
     [ServerRpc]
     public void SendSystemMessageServerRpc(string msg, ulong clientId)

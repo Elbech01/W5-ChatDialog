@@ -4,12 +4,14 @@ using UnityEngine;
 using System.Net;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
+using UnityEngine.UI;
 
 public class Main : NetworkBehaviour
 {
     public It4080.NetworkSettings netSettings;
     public It4080.Chat chat;
     public ChatServer chatServer;
+    private Button btnStart;
     
 
 
@@ -20,7 +22,10 @@ public class Main : NetworkBehaviour
         netSettings.startClient += NetSettingsOnClientStart;
         netSettings.setStatusText("Not Connected");
 
-        chat.SendMessage += ChatOnSendMessage;
+        //chat.SendMessage += ChatOnSendMessage;
+
+        btnStart = GameObject.Find("btnStart").GetComponent<Button>();
+        btnStart.onClick.AddListener(btnStartOnClick);
     }
 
     private void ChatOnSendMessage(It4080.Chat.ChatMessage msg)
@@ -72,6 +77,18 @@ public class Main : NetworkBehaviour
 
     // ------------------------------------
     // Events
+
+    private void btnStartOnClick()
+    {
+        StartGame();
+    }
+
+    private void StartGame()
+    {
+        NetworkManager.SceneManager.LoadScene("Arena1",
+            UnityEngine.SceneManagement.LoadSceneMode.Single);
+    }
+
     private void NetSettingsOnServerStart(IPAddress ip, ushort port) {
         startServer(ip, port);
         Debug.Log("Server started");
